@@ -1,0 +1,21 @@
+li{
+    list-style-type: none;
+    text-align: center;
+    transition: background-color .5s;
+}
+
+li:hover{
+    background-color: white;
+}
+
+a{
+    color: white;
+    padding: 1em;
+    transition: color .5s;
+}
+
+a:hover{
+    text-decoration: none;
+    color: black;
+
+}

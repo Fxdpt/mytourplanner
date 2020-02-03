@@ -1,0 +1,17 @@
+footer{
+    background-color: black;
+    height: 10em;
+    width: 100%;
+    display: flex;
+}
+
+footer ul{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+footer li{
+    justify-content: space-between;
+}

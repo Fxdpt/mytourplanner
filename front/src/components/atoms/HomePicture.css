@@ -1,0 +1,13 @@
+.thumb-1{
+    background: url(../../images/concert.jpg) 30% 30% no-repeat;
+    border-radius: 50%;
+    width: 20em;
+    height: 20em;
+}
+
+.thumb-2{
+    background: url(../../images/people.jpg)  70% 30% no-repeat;
+    border-radius: 50%;
+    width: 20em;
+    height: 20em;
+}

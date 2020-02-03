@@ -1,0 +1,6 @@
+entity: Message
+items:
+  message{1..300}:
+    content: '{{lorem.sentence}}'
+    user: '@user*'
+    event: '@event*'

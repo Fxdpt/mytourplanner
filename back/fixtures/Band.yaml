@@ -1,0 +1,5 @@
+entity: Band
+items:
+  band{1..15}:
+    name: '{{company.companyName}}'
+    picture: '{{image.nightlife}}'

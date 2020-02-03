@@ -1,0 +1,9 @@
+entity: Event
+items:
+  event{1..80}:
+    date: '{{date.future}}'
+    place: '@place*'
+    bands: 
+      - '@band*'
+    users:
+      - '@user*' 

@@ -1,0 +1,6 @@
+entity: User
+items:
+  user{1..20}:
+    username: '{{internet.userName}}'
+    email: '{{internet.email}}'
+    password: sha1$6a83e252$1$8c9e24f39d26addca7e2788c1e0b858976c68df3
