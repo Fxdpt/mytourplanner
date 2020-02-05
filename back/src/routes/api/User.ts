@@ -20,10 +20,31 @@ router.get('/:id', async (req:express.Request, res:express.Response) =>{
 router.post('/', async (req:express.Request, res:express.Response) => {
 
     const newUser:User = new User()
+    const email:string = req.body.email
+    const password:string = req.body.password
+    const confirm_password:string = req.body.confirm_password
+    const username:string = req.body.username
+    const hiddenField = req.body.hidden
 
-    newUser.email = req.body.email
-    newUser.password = hash.generate(req.body.password)
-    newUser.username = req.body.username
+    //Check if a field is not set or if the hiddenField is set (if the hidden field is set there is propability that the form was submit by a bot)
+    if(
+        hiddenField 
+        || !password 
+        || !email 
+        || !confirm_password 
+        || !username 
+        || password !== confirm_password
+        ){
+        return res.send('Les informations saisies sont incorrectes')
+    }
+
+    if(password.length < 8){
+        return res.send('Votre mot de passe doit faire au moins 8 caractères')
+    }
+
+    newUser.email = email
+    newUser.password = hash.generate(password)
+    newUser.username = username
 
     await getRepository(User).save(newUser)
 
