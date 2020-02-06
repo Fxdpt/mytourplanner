@@ -13,8 +13,14 @@ const PORT = process.env.PORT || 5000
 app.use(cors())
 app.use(express.json())
 app.use(expressJWT(
-    {secret: process.env.JWT_PASSPHRASE})
-    .unless({path: ['/login']})
+    { secret: process.env.JWT_PASSPHRASE })
+    .unless( req =>{
+        return(
+            req.originalUrl === '/login' ||
+            req.originalUrl === '/users' && req.method === 'POST'
+        )
+        
+    })
 )
 
 const userRoutes = require('./routes/api/User')

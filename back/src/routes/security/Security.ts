@@ -9,11 +9,15 @@ const router = express.Router()
 
 router.post('/login', async (req:express.Request,res:express.Response) => {
     const email:string =  req.body.email
-    const password:string = hash.generate(req.body.password)
+    const password:string = req.body.password
     const hiddenField:boolean = req.body.hiddenField
     const user:User = await getRepository(User).findOne({where:{email:email}})
 
-    if(!user || hiddenField || password !== user.password){
+    if(!email || !password){
+        return res.send('Les informations saisies sont incorrectes')
+    }
+
+    if(!user || !hash.verify(password,user.password) || hiddenField !== undefined){
         return res.send('Les informations saisies sont incorrectes')
     }
 
@@ -22,6 +26,8 @@ router.post('/login', async (req:express.Request,res:express.Response) => {
     }, process.env.JWT_PASSPHRASE)
 
     res.send({
-        token:token,
+        token:token
     })
 })
+
+module.exports = router
