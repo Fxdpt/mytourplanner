@@ -3,6 +3,7 @@ import { User } from '../../entity/User'
 import express = require('express')
 const router = express.Router()
 const hash = require('password-hash')
+import { JsonHandler } from '../../services/JsonHandler'
 
 router.get('/', async (req:express.Request, res:express.Response) => {
     const users:User[] = await getRepository(User).find()
@@ -24,7 +25,7 @@ router.post('/', async (req:express.Request, res:express.Response) => {
     const password:string = req.body.password
     const confirm_password:string = req.body.confirm_password
     const username:string = req.body.username
-    const hiddenField = req.body.hidden
+    const hiddenField:boolean = req.body.hidden
 
     //Check if a field is not set or if the hiddenField is set (if the hidden field is set there is propability that the form was submit by a bot)
     if(
@@ -34,12 +35,15 @@ router.post('/', async (req:express.Request, res:express.Response) => {
         || !confirm_password 
         || !username 
         || password !== confirm_password
-        ){
-        return res.send('Les informations saisies sont incorrectes')
+    ){
+
+        const response:JsonHandler = JsonHandler.JsonResponse(false,'Les informations saisies sont incorrectes')
+        return res.send(response)
     }
 
     if(password.length < 8){
-        return res.send('Votre mot de passe doit faire au moins 8 caractères')
+        const response:JsonHandler = JsonHandler.JsonResponse(false,'Votre mot de passe doit faire au moins 8 caractères')
+        return res.send(response)
     }
 
     newUser.email = email

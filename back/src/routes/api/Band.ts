@@ -6,7 +6,6 @@ const router = express.Router()
 
 router.get('/', async (req:express.Request, res:express.Response) => {
     const bands:Band[] = await getRepository(Band).find()
-
     res.send(bands)
 })
 
