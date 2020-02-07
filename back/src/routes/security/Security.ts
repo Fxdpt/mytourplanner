@@ -17,7 +17,7 @@ router.post('/login', async (req:express.Request,res:express.Response) => {
         return res.send('Les informations saisies sont incorrectes')
     }
 
-    if(!user || !hash.verify(password,user.password) || hiddenField !== undefined){
+    if(!user || !hash.verify(password,user.password) || typeof hiddenField !== 'undefined'){
         return res.send('Les informations saisies sont incorrectes')
     }
 

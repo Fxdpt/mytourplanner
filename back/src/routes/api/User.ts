@@ -28,7 +28,7 @@ router.post('/', async (req:express.Request, res:express.Response) => {
 
     //Check if a field is not set or if the hiddenField is set (if the hidden field is set there is propability that the form was submit by a bot)
     if(
-        hiddenField 
+        typeof hiddenField !== 'undefined'
         || !password 
         || !email 
         || !confirm_password 
