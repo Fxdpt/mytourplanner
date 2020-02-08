@@ -4,6 +4,7 @@ import { Place } from '../../entity/Place'
 import { Event } from '../../entity/Event'
 import { Band } from '../../entity/Band'
 import { Message } from '../../entity/Message'
+import { JsonHandler } from '../../services/JsonHandler'
 const router = express.Router()
 
 router.get('/', async (req: express.Request, res: express.Response) => {
@@ -21,18 +22,23 @@ router.get('/:id', async (req: express.Request, res: express.Response) => {
 
 router.post('/', async (req: express.Request, res: express.Response) => {
     const event: Event = new Event()
+    const data: any = JsonHandler.clearInput(req.body)
+    const bands: Band[] = await getRepository(Band).findByIds(data.bands)
+    const place: Place = await getRepository(Place).findOne(data.place)
 
-    const bands: Band[] = await getRepository(Band).findByIds(req.body.bands)
-    const place: Place = await getRepository(Place).findOne(req.body.place)
+    if(!data.date){
+        const response: JsonHandler= JsonHandler.JsonResponse(false,'Une date doit obligatoirement être spécifiée')
+        return res.send(response)
+    }
 
-    event.date = req.body.date
+    event.date = data.date
     event.bands = bands
     event.place = place
 
-
     await getRepository(Event).save(event)
 
-    res.send(event)
+    const response: JsonHandler= JsonHandler.JsonResponse(true,'Evènement créé')
+    res.send(response)
 })
 
 router.delete('/:id', async (req: express.Request, res: express.Response) => {
@@ -41,23 +47,24 @@ router.delete('/:id', async (req: express.Request, res: express.Response) => {
 
     await getRepository(Event).remove(event)
 
-    res.send(event)
-
+    const response: JsonHandler= JsonHandler.JsonResponse(true,'Evènement supprimé')
+    res.send(response)
 })
 
 router.put('/:id', async (req: express.Request, res: express.Response) => {
     const id: number = req.params.id
     const event: Event = await getRepository(Event).findOne(id)
+    const data: any = JsonHandler.clearInput(req.body) 
+    const bands: Band[] = await getRepository(Band).findByIds(data.bands)
+    const place: Place = await getRepository(Place).findOne(data.place)
 
-    const bands: Band[] = await getRepository(Band).findByIds(req.body.bands)
-    const place: Place = await getRepository(Place).findOne(req.body.place)
-
-    event.date = req.body.date
+    event.date = data.date
     event.bands = bands
     event.place = place
 
     await getRepository(Event).save(event)
 
+    const response: JsonHandler= JsonHandler.JsonResponse(true,'Evènement édité')
     res.send(event)
 })
 
@@ -72,13 +79,22 @@ router.get('/:id/messages', async (req: express.Request, res: express.Response) 
 router.post('/:id/messages', async (req: express.Request, res: express.Response) => {
     const id: number = req.params.id
     const event: Event = await getRepository(Event).findOne(id)
+    const data: any = JsonHandler.clearInput(req.body)
+
+    if(!data.message || data.message === ""){
+        const response: JsonHandler= JsonHandler.JsonResponse(false,"Votre message ne peut pas être vide")
+        return res.send(response)
+    }
 
     const message = new Message()
-    message.content = req.body.content
+    message.content = data.content
     message.event = event
 
-    //TODO: Implement passport 
+    //TODO: Get Current user 
     message.user = req.user
+
+    const response: JsonHandler= JsonHandler.JsonResponse(true,'Message envoyé')
+    res.send(response)
 })
 
 module.exports = router
