@@ -1,6 +1,5 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable} from 'typeorm'
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable, Unique} from 'typeorm'
 import { Message } from './Message'
-import { Event } from './Event'
 
 @Entity()
 export class User {
@@ -8,7 +7,7 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({unique:true})
     email: string
 
     @Column({ nullable:true })

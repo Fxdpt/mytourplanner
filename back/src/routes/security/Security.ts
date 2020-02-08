@@ -1,24 +1,29 @@
 import { getRepository } from "typeorm"
 import { User } from '../../entity/User'
 import express = require('express')
-const jwt = require('jsonwebtoken')
+import { JsonHandler } from '../../services/JsonHandler'
 
+const jwt = require('jsonwebtoken')
 const hash = require('password-hash')
 const router = express.Router()
 
 
 router.post('/login', async (req:express.Request,res:express.Response) => {
-    const email:string =  req.body.email
-    const password:string = req.body.password
-    const hiddenField:boolean = req.body.hiddenField
+    const data:any = JsonHandler.clearInput(req.body)
+    
+    const email:string =  data.email
+    const password:string = data.password
+    const hiddenField:boolean = data.hiddenField
     const user:User = await getRepository(User).findOne({where:{email:email}})
 
     if(!email || !password){
-        return res.send('Les informations saisies sont incorrectes')
+        const response: JsonHandler= JsonHandler.JsonResponse(false,'Les informations saisies sont incorrectes')
+        return res.send(response)
     }
 
     if(!user || !hash.verify(password,user.password) || typeof hiddenField !== 'undefined'){
-        return res.send('Les informations saisies sont incorrectes')
+        const response: JsonHandler= JsonHandler.JsonResponse(false,'Les informations saisies sont incorrectes')
+        return res.send(response)
     }
 
     const token  = jwt.sign({

@@ -3,43 +3,53 @@ import { User } from '../../entity/User'
 import express = require('express')
 const router = express.Router()
 const hash = require('password-hash')
+import { JsonHandler } from '../../services/JsonHandler'
 
-router.get('/', async (req:express.Request, res:express.Response) => {
-    const users:User[] = await getRepository(User).find()
-    
+router.get('/', async (req: express.Request, res: express.Response) => {
+    const users: User[] = await getRepository(User).find()
+
     res.send(users)
 })
 
-router.get('/:id', async (req:express.Request, res:express.Response) =>{
-    const id:number = req.params.id
-    const user:User = await getRepository(User).findOne(id)
-    
+router.get('/:id', async (req: express.Request, res: express.Response) => {
+    const id: number = req.params.id
+    const user: User = await getRepository(User).findOne(id)
+
     res.send(user)
 })
 
-router.post('/', async (req:express.Request, res:express.Response) => {
+router.post('/', async (req: express.Request, res: express.Response) => {
 
-    const newUser:User = new User()
-    const email:string = req.body.email
-    const password:string = req.body.password
-    const confirm_password:string = req.body.confirm_password
-    const username:string = req.body.username
-    const hiddenField = req.body.hidden
+    const newUser: User = new User()
+    const data: any = JsonHandler.clearInput(req.body)
+    const email: string = data.email
+    const password: string = data.password
+    const confirm_password: string = data.confirm_password
+    const username: string = data.username
+    const hiddenField: boolean = data.hiddenField
+    const user = await getRepository(User).findOne({ where: { email: email } })
 
-    //Check if a field is not set or if the hiddenField is set (if the hidden field is set there is propability that the form was submit by a bot)
-    if(
-        typeof hiddenField !== 'undefined'
-        || !password 
-        || !email 
-        || !confirm_password 
-        || !username 
-        || password !== confirm_password
-        ){
-        return res.send('Les informations saisies sont incorrectes')
+    if (user) {
+        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Cet adresse mail possède déjà un compte')
+        return res.send(response)
     }
 
-    if(password.length < 8){
-        return res.send('Votre mot de passe doit faire au moins 8 caractères')
+    //Check if a field is not set or if the hiddenField is set (if the hidden field is set there is propability that the form was submit by a bot)
+    if (
+        typeof hiddenField !== 'undefined'
+        || !password
+        || !email
+        || !confirm_password
+        || !username
+        || password !== confirm_password
+    ) {
+        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes')
+        return res.send(response)
+    }
+
+    if (password.length < 8) {
+        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Votre mot de passe doit faire au moins 8 caractères')
+        return res.send(response)
     }
 
     newUser.email = email
@@ -48,29 +58,38 @@ router.post('/', async (req:express.Request, res:express.Response) => {
 
     await getRepository(User).save(newUser)
 
-    res.send(newUser)
+    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Inscription validée')
+    res.send(response)
 
 })
 
-router.delete('/:id', async (req:express.Request, res:express.Response) =>{
-    const id:number = req.params.id
-    const user:User = await getRepository(User).findOne(id)
-    
+router.delete('/:id', async (req: express.Request, res: express.Response) => {
+    const id: number = req.params.id
+    const user: User = await getRepository(User).findOne(id)
+
     await getRepository(User).remove(user)
-    
-    res.send(user)
+
+    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Utilisateur supprimé')
+    res.send(response)
 })
 
-router.put('/:id', async (req:express.Request, res:express.Response) =>{
-    const id:number = req.params.id
-    const user:User = await getRepository(User).findOne(id)
-    
-    user.email = req.body.email
-    user.username = req.body.username
+router.put('/:id', async (req: express.Request, res: express.Response) => {
+    const id: number = req.params.id
+    const user: User = await getRepository(User).findOne(id)
+    const data: any = JsonHandler.clearInput(req.body)
+
+    if (user !== req.user) {
+        const response: JsonHandler= JsonHandler.JsonResponse(false, 'Vous ne pouvez modifier que les informations de votre compte')
+        return res.send(response)
+    }
+
+    user.email = data.email
+    user.username = data.username
 
     await getRepository(User).save(user)
-    
-    res.send(user)
+
+    const response: JsonHandler= JsonHandler.JsonResponse(true, 'Informations mise à jour')
+    res.send(response)
 })
 
 module.exports = router;
