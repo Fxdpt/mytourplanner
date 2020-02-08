@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne} from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm'
 import { User } from './User'
 import { Event } from './Event'
 
@@ -15,6 +15,6 @@ export class Message {
     user: User
 
     @ManyToOne(type => Event, event => event.messages)
-    event : Event
+    event: Event
 
 }

@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinTable} from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, ManyToMany, JoinTable } from 'typeorm'
 import { Message } from './Message'
 import { Place } from './Place'
 import { Band } from './Band'
@@ -10,16 +10,16 @@ export class Event {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({type: 'datetime'})
+    @Column({ type: 'datetime' })
     date: Date
 
-    @OneToMany( type => Message, messages => messages.event)
+    @OneToMany(type => Message, messages => messages.event)
     messages: Message[]
 
-    @ManyToOne( type => Place, place => place.events)
+    @ManyToOne(type => Place, place => place.events)
     place: Place
 
-    @ManyToMany( type => Band)
+    @ManyToMany(type => Band)
     @JoinTable()
     bands: Band[]
 

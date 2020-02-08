@@ -22,7 +22,7 @@ router.post('/', async (req: express.Request, res: express.Response) => {
     const data: any = JsonHandler.clearInput(req.body)
 
     if (!data.name) {
-        const response: JsonHandler= JsonHandler.JsonResponse(false, "Champ 'nom' requis")
+        const response: JsonHandler = JsonHandler.JsonResponse(false, "Champ 'nom' requis")
         return res.send(response)
     }
 
@@ -30,7 +30,7 @@ router.post('/', async (req: express.Request, res: express.Response) => {
     band.picture = data.picture
 
     await getRepository(Band).save(band)
-    const response: JsonHandler= JsonHandler.JsonResponse(true, 'Groupe créé')
+    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Groupe créé')
     res.send(response)
 })
 
@@ -39,7 +39,7 @@ router.delete('/:id', async (req: express.Request, res: express.Response) => {
     const band: Band = await getRepository(Band).findOne(bandId)
 
     await getRepository(Band).remove(band)
-    const response: JsonHandler= JsonHandler.JsonResponse(true, 'Groupe supprimé')
+    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Groupe supprimé')
     res.send(response)
 
 })
@@ -52,7 +52,7 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
     band.picture = data.picture
 
     await getRepository(Band).save(band)
-    const response: JsonHandler= JsonHandler.JsonResponse(true, 'Groupe edité')
+    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Groupe edité')
     res.send(response)
 })
 

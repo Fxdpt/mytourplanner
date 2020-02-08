@@ -79,7 +79,7 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
     const data: any = JsonHandler.clearInput(req.body)
 
     if (user !== req.user) {
-        const response: JsonHandler= JsonHandler.JsonResponse(false, 'Vous ne pouvez modifier que les informations de votre compte')
+        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Vous ne pouvez modifier que les informations de votre compte')
         return res.send(response)
     }
 
@@ -88,7 +88,7 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
 
     await getRepository(User).save(user)
 
-    const response: JsonHandler= JsonHandler.JsonResponse(true, 'Informations mise à jour')
+    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Informations mise à jour')
     res.send(response)
 })
 

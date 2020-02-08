@@ -9,7 +9,7 @@ import { User } from '../../entity/User'
 const router = express.Router()
 
 router.get('/', async (req: express.Request, res: express.Response) => {
-    const events: Event[] = await getRepository(Event).find({relations:["place","users","bands"]})
+    const events: Event[] = await getRepository(Event).find({ relations: ["place", "users", "bands"] })
 
     res.send(events)
 })
@@ -18,9 +18,9 @@ router.get('/:id', async (req: express.Request, res: express.Response) => {
     const eventId: number = req.params.id
     const event: Event = await getRepository(Event).findOne({
         where: {
-            id:eventId
+            id: eventId
         },
-        relations: ["place","users","bands"]
+        relations: ["place", "users", "bands"]
     })
 
     res.send(event)
@@ -61,9 +61,9 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
     const id: number = req.params.id
     const event: Event = await getRepository(Event).findOne({
         where: {
-            id:id
+            id: id
         },
-        relations: ["users","bands","place"]
+        relations: ["users", "bands", "place"]
     })
     const data: any = JsonHandler.clearInput(req.body)
     const bands: Band[] = await getRepository(Band).findByIds(data.bands)
@@ -76,7 +76,7 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
     await getRepository(Event).save(event)
 
     const response: JsonHandler = JsonHandler.JsonResponse(true, 'Evènement édité')
-    res.send(event)
+    res.send(response)
 })
 
 router.get('/:id/messages', async (req: express.Request, res: express.Response) => {
@@ -117,15 +117,15 @@ router.post('/:id/users', async (req: express.Request, res: express.Response) =>
     const user: User = await getRepository(User).findOne(userId)
     const event: Event = await getRepository(Event).findOne({
         where: {
-            id:id
+            id: id
         },
         relations: ["users"]
     })
 
     event.users.forEach(userSubscribed => {
         //Fix: We don't go inside the condition
-        if(userSubscribed === user){
-            const response = JsonHandler.JsonResponse(false,'Vous êtes déjà inscrit à cet évènement')
+        if (userSubscribed === user) {
+            const response = JsonHandler.JsonResponse(false, 'Vous êtes déjà inscrit à cet évènement')
             return res.send(response)
         }
     })
@@ -134,8 +134,30 @@ router.post('/:id/users', async (req: express.Request, res: express.Response) =>
 
     await getRepository(Event).save(event)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true,'Inscription à l\'évènement confirmée')
+    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Inscription à l\'évènement confirmée')
     res.send(response)
+})
+
+router.delete('/:id/users', async (req: express.Request, res: express.Response) => {
+    const id: number = req.params.id
+    const userId: number = req.user.id
+    const event: Event = await getRepository(Event).findOne({
+        where: {
+            id: id
+        },
+        relations: ["place", "users", "bands"]
+    })
+
+    event.users = event.users.filter(user => (
+        user.id !== userId
+    ))
+
+    await getRepository(Event).save(event)
+
+    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Désinscription à l\'évènement confirmée')
+    res.send(response)
+
+
 })
 
 module.exports = router
