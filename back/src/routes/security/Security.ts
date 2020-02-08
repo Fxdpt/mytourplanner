@@ -27,7 +27,9 @@ router.post('/login', async (req:express.Request,res:express.Response) => {
     }
 
     const token  = jwt.sign({
-        username: email
+        id: user.id,
+        email: user.email,
+        username: user.username
     }, process.env.JWT_PASSPHRASE)
 
     res.send({
