@@ -1,8 +1,8 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
 import { Event } from './Event'
 
 @Entity()
-export class Place{
+export class Place {
 
     @PrimaryGeneratedColumn()
     id: number

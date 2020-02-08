@@ -4,25 +4,25 @@ import { Place } from '../../entity/Place'
 import { JsonHandler } from '../../services/JsonHandler'
 const router = express.Router()
 
-router.get('/', async (req:express.Request, res:express.Response) => {
-    const places:Place[] = await getRepository(Place).find()
+router.get('/', async (req: express.Request, res: express.Response) => {
+    const places: Place[] = await getRepository(Place).find()
 
     res.send(places)
 })
 
-router.get('/:id', async (req:express.Request, res:express.Response) => {
-    const placeId:number = req.params.id
-    const place:Place = await getRepository(Place).findOne(placeId)
+router.get('/:id', async (req: express.Request, res: express.Response) => {
+    const placeId: number = req.params.id
+    const place: Place = await getRepository(Place).findOne(placeId)
 
     res.send(place)
 })
 
-router.post('/', async (req:express.Request, res:express.Response) => {
-    const place:Place = new Place()
+router.post('/', async (req: express.Request, res: express.Response) => {
+    const place: Place = new Place()
     const data: any = JsonHandler.clearInput(req.body)
 
-    if(!data.name || data.name === ""){
-        const response: JsonHandler= JsonHandler.JsonResponse(false,"Champ 'lieu' manquant")
+    if (!data.name || data.name === "") {
+        const response: JsonHandler = JsonHandler.JsonResponse(false, "Champ 'lieu' manquant")
         return res.send(response)
     }
 
@@ -30,32 +30,32 @@ router.post('/', async (req:express.Request, res:express.Response) => {
     place.city = data.city
 
     await getRepository(Place).save(place)
-    
-    const response: JsonHandler= JsonHandler.JsonResponse(true,'Lieu créé')
+
+    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Lieu créé')
     res.send(response)
 })
 
-router.delete('/:id', async (req:express.Request, res:express.Response) => {
-    const placeId:number = req.params.id
-    const place:Place = await getRepository(Place).findOne(placeId)
+router.delete('/:id', async (req: express.Request, res: express.Response) => {
+    const placeId: number = req.params.id
+    const place: Place = await getRepository(Place).findOne(placeId)
 
     await getRepository(Place).remove(place)
-    
-    const response: JsonHandler = JsonHandler.JsonResponse(true,'Lieu supprimé')
+
+    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Lieu supprimé')
     res.send(response)
-    
+
 })
 
-router.put('/:id', async (req:express.Request, res:express.Response) =>{
-    const id:number = req.params.id
-    const place:Place = await getRepository(Place).findOne(id)
+router.put('/:id', async (req: express.Request, res: express.Response) => {
+    const id: number = req.params.id
+    const place: Place = await getRepository(Place).findOne(id)
     const data: any = JsonHandler.clearInput(req.body)
     place.name = data.name
     place.city = data.city
 
     await getRepository(Place).save(place)
-    
-    const response: JsonHandler= JsonHandler.JsonResponse(true,'Lieu édité')
+
+    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Lieu édité')
     res.send(response)
 })
 

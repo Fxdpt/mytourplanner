@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm'
 
 @Entity()
 export class Band {
@@ -6,10 +6,10 @@ export class Band {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column({unique:true})
+    @Column({ unique: true })
     name: string
 
-    @Column({ nullable: true})
+    @Column({ nullable: true })
     picture: string
 
 }
