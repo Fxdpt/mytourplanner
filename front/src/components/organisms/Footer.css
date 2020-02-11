@@ -3,13 +3,32 @@ footer{
     height: 10em;
     width: 100%;
     display: flex;
+    justify-content: space-between;
 }
+
+.social{
+    display: flex;
+    justify-content: flex-end;
+}
+
+
 
 footer ul{
     display: flex;
     justify-content: space-around;
-    align-items: center;
     width: 100%;
+}
+
+.footer-nav{
+    justify-content: start;
+    padding: 0;
+}
+
+footer .container{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 90%;
 }
 
 footer li{

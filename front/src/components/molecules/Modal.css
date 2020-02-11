@@ -1,0 +1,8 @@
+.modal{
+    position: absolute;
+    top: 2em;
+    padding: 2em;
+    background-color: #fff;
+    border: 1px solid grey;
+    margin: 0 auto;
+}

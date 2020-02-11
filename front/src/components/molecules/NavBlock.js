@@ -1,46 +1,39 @@
-import React, { useState, useEffect } from 'react'
-import Link from '../atoms/Link'
+import React from 'react'
+import Toggler from '../atoms/Toggler'
+import SignIn from '../organisms/SignIn'
+import Modal from '../molecules/Modal'
 import './NavBlock.css'
 
-function NavBlock() {
-    const [linkInfos, setLinkInfos] = useState([
-        {
-            text: 'S\'INSCRIRE',
-            target: 'app_signup'
-        },
-        {
-            text: 'SE CONNECTER',
-            target: 'app_signin'
-        }
-    ])
 
-    useEffect(() => {
-        handleLinksOutput()
-    })
+function NavBlock() {
 
     const isLogged = false
 
-    const handleLinksOutput = () => {
-        if (isLogged) {
-            setLinkInfos([
-                {
-                    text: 'SE DECONNECTER',
-                    target: 'app_logout'
-                },
-                {
-                    text: 'MON PROFIL',
-                    target: 'profil'
-                }
-            ])
-        }
+    if(!isLogged){
+        return (
+            <div>
+                <ul className="navBlock">
+                    <Toggler 
+                        toggle={show => <li onClick={show}>SE CONNECTER</li>}
+                        content={hide => (
+                            <Modal>
+                                <SignIn onClick={hide} />
+                            </Modal>
+                        )}
+                    />
+                    <Toggler 
+                        toggle={show => <li onClick={show}>S'INSCRIRE</li>}
+                        content={hide => (
+                            <Modal>
+                                inscrit toi ...
+                                <span onClick={hide}>X</span>
+                            </Modal>
+                        )}
+                    />
+                </ul>
+            </div>
+        )
     }
-
-    return (
-        <ul className="navBlock">
-            <Link text={linkInfos[0].text} target={linkInfos[0].target} ></Link>
-            <Link text={linkInfos[1].text} target={linkInfos[1].target} ></Link>
-        </ul>
-    )
 }
 
 export default NavBlock
