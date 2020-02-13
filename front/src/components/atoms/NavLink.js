@@ -4,7 +4,7 @@ import './NavLink.css'
 function NavLink(props) {
     return (
         <li>
-            <a href="#">{props.text}</a>
+            <a href="/">{props.text}</a>
         </li>        
     )
 }

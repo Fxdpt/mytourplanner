@@ -1,7 +1,31 @@
-.hidden{
-    display: none;
+.form-container{
+    display:flex;
+    flex-direction: column;
 }
 
-.shown{
-    display: block;
+form{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    align-self: center;
+}
+
+.MuiFormControl-root, .MuiButtonBase-root {
+    margin-top: 2em !important;
+}
+
+
+input[name = username],input[name = password],.MuiFormLabel-root{
+    color: white !important;
+}
+
+.close-modal-button{
+    display: flex !important;
+    align-items: flex-end !important;
+}
+
+span{
+    
+    display: flex;
+    align-self: flex-end;
 }
