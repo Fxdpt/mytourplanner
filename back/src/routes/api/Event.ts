@@ -1,4 +1,6 @@
-import { getRepository } from 'typeorm'
+import { getRepository, getCustomRepository } from 'typeorm'
+import {EventRepository} from '../../repository/EventRepository'
+import {MessageRepository} from '../../repository/MessageRepository'
 import express = require('express')
 import { Place } from '../../entity/Place'
 import { Event } from '../../entity/Event'
@@ -8,20 +10,16 @@ import { JsonHandler } from '../../services/JsonHandler'
 import { User } from '../../entity/User'
 const router = express.Router()
 
+
 router.get('/', async (req: express.Request, res: express.Response) => {
-    const events: Event[] = await getRepository(Event).find({ relations: ["place", "users", "bands"] })
+    const events: Event[] = await getCustomRepository(EventRepository).findAllWithRelations()
 
     res.send(events)
 })
 
 router.get('/:id', async (req: express.Request, res: express.Response) => {
-    const eventId: number = req.params.id
-    const event: Event = await getRepository(Event).findOne({
-        where: {
-            id: eventId
-        },
-        relations: ["place", "users", "bands"]
-    })
+    const id: number = req.params.id
+    const event: Event = await getCustomRepository(EventRepository).findOneWithRelations(id)
 
     res.send(event)
 })
@@ -48,8 +46,8 @@ router.post('/', async (req: express.Request, res: express.Response) => {
 })
 
 router.delete('/:id', async (req: express.Request, res: express.Response) => {
-    const eventId: number = req.params.id
-    const event: Event = await getRepository(Event).findOne(eventId)
+    const id: number = req.params.id
+    const event: Event = await getRepository(Event).findOne(id)
 
     await getRepository(Event).remove(event)
 
@@ -59,17 +57,13 @@ router.delete('/:id', async (req: express.Request, res: express.Response) => {
 
 router.put('/:id', async (req: express.Request, res: express.Response) => {
     const id: number = req.params.id
-    const event: Event = await getRepository(Event).findOne({
-        where: {
-            id: id
-        },
-        relations: ["users", "bands", "place"]
-    })
+    const event: Event = await getCustomRepository(EventRepository).findOneWithRelations(id)
     const data: any = JsonHandler.clearInput(req.body)
     const bands: Band[] = await getRepository(Band).findByIds(data.bands)
     const place: Place = await getRepository(Place).findOne(data.place)
 
     event.date = data.date
+    //TODO: Prevent removal of scheduled bands
     event.bands = bands
     event.place = place
 
@@ -82,7 +76,7 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
 router.get('/:id/messages', async (req: express.Request, res: express.Response) => {
     const id: number = req.params.id
     const event: Event = await getRepository(Event).findOne(id)
-    const messages: Message[] = await getRepository(Message).find({ where: { event: event } })
+    const messages: Message[] = await getCustomRepository(MessageRepository).findMessagesForEvent(event)
 
     res.send(messages)
 })
@@ -115,12 +109,7 @@ router.post('/:id/users', async (req: express.Request, res: express.Response) =>
     const id: number = req.params.id
     const userId: number = req.user.id
     const user: User = await getRepository(User).findOne(userId)
-    const event: Event = await getRepository(Event).findOne({
-        where: {
-            id: id
-        },
-        relations: ["users"]
-    })
+    const event: Event = await getCustomRepository(EventRepository).findWithUsers(id)
 
     event.users.forEach(userSubscribed => {
         //Fix: We don't go inside the condition
@@ -141,12 +130,7 @@ router.post('/:id/users', async (req: express.Request, res: express.Response) =>
 router.delete('/:id/users', async (req: express.Request, res: express.Response) => {
     const id: number = req.params.id
     const userId: number = req.user.id
-    const event: Event = await getRepository(Event).findOne({
-        where: {
-            id: id
-        },
-        relations: ["place", "users", "bands"]
-    })
+    const event: Event = await getCustomRepository(EventRepository).findOneWithRelations(id)
 
     event.users = event.users.filter(user => (
         user.id !== userId
