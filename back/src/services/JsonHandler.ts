@@ -14,9 +14,9 @@ export class JsonHandler {
         return clearInput
     }
 
-    // TODO: handle status Code
-    static JsonResponse = (success:boolean, message:string) => {
+    static JsonResponse = (success:boolean, message:string, statusCode:number = 200) => {
         return({
+            "status": statusCode,
             "success": success,
             "message": message,
         })
