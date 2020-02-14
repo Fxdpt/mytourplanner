@@ -14,11 +14,13 @@ router.post('/login', async (req: express.Request, res: express.Response) => {
     const user: User = await getRepository(User).findOne({ where: { email: email } })
 
     if (!email || !password) {
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes')
+        res.status(400)
+        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes',res.statusCode)
         return res.send(response)
     }
     if (!user || !hash.verify(password, user.password) || typeof hiddenField !== 'undefined') {
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes')
+        res.status(400)
+        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes',res.statusCode)
         return res.send(response)
     }
 

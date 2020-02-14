@@ -22,7 +22,8 @@ router.post('/', async (req: express.Request, res: express.Response) => {
     const data: any = JsonHandler.clearInput(req.body)
 
     if (!data.name || data.name === "") {
-        const response: JsonHandler = JsonHandler.JsonResponse(false, "Champ 'lieu' manquant")
+        res.status(400)
+        const response: JsonHandler = JsonHandler.JsonResponse(false, "Champ 'lieu' manquant",res.statuscode)
         return res.send(response)
     }
 

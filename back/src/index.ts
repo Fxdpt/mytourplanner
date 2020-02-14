@@ -18,7 +18,6 @@ app.use(expressJWT(
             req.originalUrl === '/login' ||
             req.originalUrl === '/users' && req.method === 'POST'
         )
-
     })
 )
 

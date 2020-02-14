@@ -30,7 +30,8 @@ router.post('/', async (req: express.Request, res: express.Response) => {
     const place: Place = await getRepository(Place).findOne(data.place)
 
     if (!data.date) {
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Une date doit obligatoirement être spécifiée')
+        res.status(400)
+        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Une date doit obligatoirement être spécifiée',res.statusCode)
         return res.send(response)
     }
 
@@ -87,7 +88,8 @@ router.post('/:id/messages', async (req: express.Request, res: express.Response)
     const data: any = JsonHandler.clearInput(req.body)
 
     if (!data.content || data.content === "") {
-        const response: JsonHandler = JsonHandler.JsonResponse(false, "Votre message ne peut pas être vide")
+        res.status(400)
+        const response: JsonHandler = JsonHandler.JsonResponse(false, "Votre message ne peut pas être vide",res.statusCode)
         return res.send(response)
     }
 
@@ -110,7 +112,8 @@ router.post('/:id/users', async (req: express.Request, res: express.Response) =>
     event.users.forEach(userSubscribed => {
         //Fix: We don't go inside the condition
         if (userSubscribed === user) {
-            const response = JsonHandler.JsonResponse(false, 'Vous êtes déjà inscrit à cet évènement')
+            res.status(403)
+            const response = JsonHandler.JsonResponse(false, 'Vous êtes déjà inscrit à cet évènement',res.statusCode)
             return res.send(response)
         }
     })

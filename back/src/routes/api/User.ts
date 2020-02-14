@@ -29,7 +29,8 @@ router.post('/', async (req: express.Request, res: express.Response) => {
     const user = await getRepository(User).findOne({ where: { email: email } })
 
     if (user) {
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Cet adresse mail possède déjà un compte')
+        res.status(403)
+        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Cet adresse mail possède déjà un compte',res.statusCode)
         return res.send(response)
     }
     //Check if a field is not set or if the hiddenField is set (if the hidden field is set there is propability that the form was submit by a bot)
@@ -45,7 +46,8 @@ router.post('/', async (req: express.Request, res: express.Response) => {
         return res.send(response)
     }
     if (password.length < 8) {
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Votre mot de passe doit faire au moins 8 caractères')
+        res.status(400)
+        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Votre mot de passe doit faire au moins 8 caractères',res.statusCode)
         return res.send(response)
     }
 
@@ -74,7 +76,8 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
     const data: any = JsonHandler.clearInput(req.body)
 
     if (user !== req.user) {
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Vous ne pouvez modifier que les informations de votre compte')
+        res.status(403)
+        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Vous ne pouvez modifier que les informations de votre compte',res.statusCode)
         return res.send(response)
     }
 

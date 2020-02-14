@@ -22,7 +22,8 @@ router.post('/', async (req: express.Request, res: express.Response) => {
     const data: any = JsonHandler.clearInput(req.body)
 
     if (!data.name) {
-        const response: JsonHandler = JsonHandler.JsonResponse(false, "Champ 'nom' requis")
+        res.status(400)
+        const response: JsonHandler = JsonHandler.JsonResponse(false, "Champ 'nom' requis",res.statusCode)
         return res.send(response)
     }
 
