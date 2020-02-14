@@ -2,15 +2,12 @@ import { getRepository } from "typeorm"
 import { User } from '../../entity/User'
 import express = require('express')
 import { JsonHandler } from '../../services/JsonHandler'
-
 const jwt = require('jsonwebtoken')
 const hash = require('password-hash')
 const router = express.Router()
 
-
 router.post('/login', async (req: express.Request, res: express.Response) => {
     const data: any = JsonHandler.clearInput(req.body)
-
     const email: string = data.email
     const password: string = data.password
     const hiddenField: boolean = data.hiddenField
@@ -20,7 +17,6 @@ router.post('/login', async (req: express.Request, res: express.Response) => {
         const response: JsonHandler = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes')
         return res.send(response)
     }
-
     if (!user || !hash.verify(password, user.password) || typeof hiddenField !== 'undefined') {
         const response: JsonHandler = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes')
         return res.send(response)

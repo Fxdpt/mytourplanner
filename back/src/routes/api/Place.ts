@@ -1,5 +1,5 @@
-import { getRepository } from 'typeorm'
 import express = require('express')
+import { getRepository } from 'typeorm'
 import { Place } from '../../entity/Place'
 import { JsonHandler } from '../../services/JsonHandler'
 const router = express.Router()
@@ -28,7 +28,6 @@ router.post('/', async (req: express.Request, res: express.Response) => {
 
     place.name = data.name
     place.city = data.city
-
     await getRepository(Place).save(place)
 
     const response: JsonHandler = JsonHandler.JsonResponse(true, 'Lieu créé')
@@ -43,16 +42,15 @@ router.delete('/:id', async (req: express.Request, res: express.Response) => {
 
     const response: JsonHandler = JsonHandler.JsonResponse(true, 'Lieu supprimé')
     res.send(response)
-
 })
 
 router.put('/:id', async (req: express.Request, res: express.Response) => {
     const id: number = req.params.id
     const place: Place = await getRepository(Place).findOne(id)
     const data: any = JsonHandler.clearInput(req.body)
+
     place.name = data.name
     place.city = data.city
-
     await getRepository(Place).save(place)
 
     const response: JsonHandler = JsonHandler.JsonResponse(true, 'Lieu édité')

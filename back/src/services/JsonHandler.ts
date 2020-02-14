@@ -13,7 +13,7 @@ export class JsonHandler {
 
         return clearInput
     }
-    // return a JSON formatted Response
+
     // TODO: handle status Code
     static JsonResponse = (success:boolean, message:string) => {
         return({

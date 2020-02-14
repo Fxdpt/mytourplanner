@@ -1,9 +1,9 @@
+import express = require('express')
 import { getRepository } from "typeorm"
 import { User } from '../../entity/User'
-import express = require('express')
+import { JsonHandler } from '../../services/JsonHandler'
 const router = express.Router()
 const hash = require('password-hash')
-import { JsonHandler } from '../../services/JsonHandler'
 
 router.get('/', async (req: express.Request, res: express.Response) => {
     const users: User[] = await getRepository(User).find()
@@ -19,7 +19,6 @@ router.get('/:id', async (req: express.Request, res: express.Response) => {
 })
 
 router.post('/', async (req: express.Request, res: express.Response) => {
-
     const newUser: User = new User()
     const data: any = JsonHandler.clearInput(req.body)
     const email: string = data.email
@@ -33,7 +32,6 @@ router.post('/', async (req: express.Request, res: express.Response) => {
         const response: JsonHandler = JsonHandler.JsonResponse(false, 'Cet adresse mail possède déjà un compte')
         return res.send(response)
     }
-
     //Check if a field is not set or if the hiddenField is set (if the hidden field is set there is propability that the form was submit by a bot)
     if (
         typeof hiddenField !== 'undefined'
@@ -46,7 +44,6 @@ router.post('/', async (req: express.Request, res: express.Response) => {
         const response: JsonHandler = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes')
         return res.send(response)
     }
-
     if (password.length < 8) {
         const response: JsonHandler = JsonHandler.JsonResponse(false, 'Votre mot de passe doit faire au moins 8 caractères')
         return res.send(response)
@@ -55,12 +52,10 @@ router.post('/', async (req: express.Request, res: express.Response) => {
     newUser.email = email
     newUser.password = hash.generate(password)
     newUser.username = username
-
     await getRepository(User).save(newUser)
 
     const response: JsonHandler = JsonHandler.JsonResponse(true, 'Inscription validée')
     res.send(response)
-
 })
 
 router.delete('/:id', async (req: express.Request, res: express.Response) => {
@@ -85,7 +80,6 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
 
     user.email = data.email
     user.username = data.username
-
     await getRepository(User).save(user)
 
     const response: JsonHandler = JsonHandler.JsonResponse(true, 'Informations mise à jour')
