@@ -1,15 +1,14 @@
-import { getRepository, getCustomRepository } from 'typeorm'
-import {EventRepository} from '../../repository/EventRepository'
-import {MessageRepository} from '../../repository/MessageRepository'
 import express = require('express')
-import { Place } from '../../entity/Place'
-import { Event } from '../../entity/Event'
+import { getRepository, getCustomRepository } from 'typeorm'
 import { Band } from '../../entity/Band'
+import { Event } from '../../entity/Event'
 import { Message } from '../../entity/Message'
-import { JsonHandler } from '../../services/JsonHandler'
+import { Place } from '../../entity/Place'
 import { User } from '../../entity/User'
+import { EventRepository } from '../../repository/EventRepository'
+import { MessageRepository } from '../../repository/MessageRepository'
+import { JsonHandler } from '../../services/JsonHandler'
 const router = express.Router()
-
 
 router.get('/', async (req: express.Request, res: express.Response) => {
     const events: Event[] = await getCustomRepository(EventRepository).findAllWithRelations()
@@ -38,7 +37,6 @@ router.post('/', async (req: express.Request, res: express.Response) => {
     event.date = data.date
     event.bands = bands
     event.place = place
-
     await getRepository(Event).save(event)
 
     const response: JsonHandler = JsonHandler.JsonResponse(true, 'Evènement créé')
@@ -63,10 +61,10 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
     const place: Place = await getRepository(Place).findOne(data.place)
 
     event.date = data.date
-    //TODO: Prevent removal of scheduled bands
-    event.bands = bands
+    bands.forEach(band => {
+        event.bands.push(band)
+    })
     event.place = place
-
     await getRepository(Event).save(event)
 
     const response: JsonHandler = JsonHandler.JsonResponse(true, 'Evènement édité')
@@ -96,8 +94,6 @@ router.post('/:id/messages', async (req: express.Request, res: express.Response)
     const message = new Message()
     message.content = data.content
     message.event = event
-
-
     message.user = user
     await getRepository(Message).save(message)
 
@@ -135,13 +131,10 @@ router.delete('/:id/users', async (req: express.Request, res: express.Response) 
     event.users = event.users.filter(user => (
         user.id !== userId
     ))
-
     await getRepository(Event).save(event)
 
     const response: JsonHandler = JsonHandler.JsonResponse(true, 'Désinscription à l\'évènement confirmée')
     res.send(response)
-
-
 })
 
 module.exports = router
