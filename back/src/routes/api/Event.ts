@@ -31,7 +31,7 @@ router.post('/', async (req: express.Request, res: express.Response) => {
 
     if (!data.date) {
         res.status(400)
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Une date doit obligatoirement être spécifiée',res.statusCode)
+        const response = JsonHandler.JsonResponse(false, 'Une date doit obligatoirement être spécifiée',res.statusCode)
         return res.send(response)
     }
 
@@ -40,7 +40,7 @@ router.post('/', async (req: express.Request, res: express.Response) => {
     event.place = place
     await getRepository(Event).save(event)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Evènement créé')
+    const response = JsonHandler.JsonResponse(true, 'Evènement créé')
     res.send(response)
 })
 
@@ -50,7 +50,7 @@ router.delete('/:id', async (req: express.Request, res: express.Response) => {
 
     await getRepository(Event).remove(event)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Evènement supprimé')
+    const response = JsonHandler.JsonResponse(true, 'Evènement supprimé')
     res.send(response)
 })
 
@@ -68,7 +68,7 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
     event.place = place
     await getRepository(Event).save(event)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Evènement édité')
+    const response = JsonHandler.JsonResponse(true, 'Evènement édité')
     res.send(response)
 })
 
@@ -89,7 +89,7 @@ router.post('/:id/messages', async (req: express.Request, res: express.Response)
 
     if (!data.content || data.content === "") {
         res.status(400)
-        const response: JsonHandler = JsonHandler.JsonResponse(false, "Votre message ne peut pas être vide",res.statusCode)
+        const response = JsonHandler.JsonResponse(false, "Votre message ne peut pas être vide",res.statusCode)
         return res.send(response)
     }
 
@@ -99,7 +99,7 @@ router.post('/:id/messages', async (req: express.Request, res: express.Response)
     message.user = user
     await getRepository(Message).save(message)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Message envoyé')
+    const response = JsonHandler.JsonResponse(true, 'Message envoyé')
     res.send(response)
 })
 
@@ -122,7 +122,7 @@ router.post('/:id/users', async (req: express.Request, res: express.Response) =>
 
     await getRepository(Event).save(event)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Inscription à l\'évènement confirmée')
+    const response = JsonHandler.JsonResponse(true, 'Inscription à l\'évènement confirmée')
     res.send(response)
 })
 
@@ -136,7 +136,7 @@ router.delete('/:id/users', async (req: express.Request, res: express.Response) 
     ))
     await getRepository(Event).save(event)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Désinscription à l\'évènement confirmée')
+    const response = JsonHandler.JsonResponse(true, 'Désinscription à l\'évènement confirmée')
     res.send(response)
 })
 

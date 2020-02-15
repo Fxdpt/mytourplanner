@@ -16,12 +16,14 @@
    },
    "devDependencies": {
       "@types/node": "^8.0.29",
+      "jest": "^25.1.0",
       "ts-node": "3.3.0",
       "typeorm-fixtures-cli": "^1.4.2",
       "typescript": "3.3.3333"
    },
    "scripts": {
       "start": "ts-node src/index.ts",
-      "fixtures": "fixtures ./fixtures.yaml"
+      "fixtures": "fixtures ./fixtures.yaml",
+      "test": "jest"
    }
 }

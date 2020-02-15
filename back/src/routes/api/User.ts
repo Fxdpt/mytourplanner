@@ -30,7 +30,7 @@ router.post('/', async (req: express.Request, res: express.Response) => {
 
     if (user) {
         res.status(403)
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Cet adresse mail possède déjà un compte',res.statusCode)
+        const response = JsonHandler.JsonResponse(false, 'Cet adresse mail possède déjà un compte',res.statusCode)
         return res.send(response)
     }
     //Check if a field is not set or if the hiddenField is set (if the hidden field is set there is propability that the form was submit by a bot)
@@ -42,12 +42,12 @@ router.post('/', async (req: express.Request, res: express.Response) => {
         || !username
         || password !== confirm_password
     ) {
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes')
+        const response = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes')
         return res.send(response)
     }
     if (password.length < 8) {
         res.status(400)
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Votre mot de passe doit faire au moins 8 caractères',res.statusCode)
+        const response = JsonHandler.JsonResponse(false, 'Votre mot de passe doit faire au moins 8 caractères',res.statusCode)
         return res.send(response)
     }
 
@@ -56,7 +56,7 @@ router.post('/', async (req: express.Request, res: express.Response) => {
     newUser.username = username
     await getRepository(User).save(newUser)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Inscription validée')
+    const response = JsonHandler.JsonResponse(true, 'Inscription validée')
     res.send(response)
 })
 
@@ -66,7 +66,7 @@ router.delete('/:id', async (req: express.Request, res: express.Response) => {
 
     await getRepository(User).remove(user)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Utilisateur supprimé')
+    const response = JsonHandler.JsonResponse(true, 'Utilisateur supprimé')
     res.send(response)
 })
 
@@ -77,7 +77,7 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
 
     if (user !== req.user) {
         res.status(403)
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Vous ne pouvez modifier que les informations de votre compte',res.statusCode)
+        const response = JsonHandler.JsonResponse(false, 'Vous ne pouvez modifier que les informations de votre compte',res.statusCode)
         return res.send(response)
     }
 
@@ -85,7 +85,7 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
     user.username = data.username
     await getRepository(User).save(user)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Informations mise à jour')
+    const response = JsonHandler.JsonResponse(true, 'Informations mise à jour')
     res.send(response)
 })
 

@@ -23,7 +23,7 @@ router.post('/', async (req: express.Request, res: express.Response) => {
 
     if (!data.name || data.name === "") {
         res.status(400)
-        const response: JsonHandler = JsonHandler.JsonResponse(false, "Champ 'lieu' manquant",res.statuscode)
+        const response = JsonHandler.JsonResponse(false, "Champ 'lieu' manquant",res.statuscode)
         return res.send(response)
     }
 
@@ -31,7 +31,7 @@ router.post('/', async (req: express.Request, res: express.Response) => {
     place.city = data.city
     await getRepository(Place).save(place)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Lieu créé')
+    const response = JsonHandler.JsonResponse(true, 'Lieu créé')
     res.send(response)
 })
 
@@ -41,7 +41,7 @@ router.delete('/:id', async (req: express.Request, res: express.Response) => {
 
     await getRepository(Place).remove(place)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Lieu supprimé')
+    const response = JsonHandler.JsonResponse(true, 'Lieu supprimé')
     res.send(response)
 })
 
@@ -54,7 +54,7 @@ router.put('/:id', async (req: express.Request, res: express.Response) => {
     place.city = data.city
     await getRepository(Place).save(place)
 
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Lieu édité')
+    const response = JsonHandler.JsonResponse(true, 'Lieu édité')
     res.send(response)
 })
 

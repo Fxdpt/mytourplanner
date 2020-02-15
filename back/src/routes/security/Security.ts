@@ -15,12 +15,12 @@ router.post('/login', async (req: express.Request, res: express.Response) => {
 
     if (!email || !password) {
         res.status(400)
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes',res.statusCode)
+        const response = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes',res.statusCode)
         return res.send(response)
     }
     if (!user || !hash.verify(password, user.password) || typeof hiddenField !== 'undefined') {
         res.status(400)
-        const response: JsonHandler = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes',res.statusCode)
+        const response = JsonHandler.JsonResponse(false, 'Les informations saisies sont incorrectes',res.statusCode)
         return res.send(response)
     }
 

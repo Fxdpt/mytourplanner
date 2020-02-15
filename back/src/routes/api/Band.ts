@@ -1,61 +1,36 @@
 import express = require('express')
-import { getRepository } from 'typeorm'
-import { Band } from '../../entity/Band'
+import {BandController} from '../../controller/BandController'
 import { JsonHandler } from '../../services/JsonHandler'
-const router = express.Router()
 
+const router = express.Router()
+const handler = new JsonHandler()
 
 router.get('/', async (req: express.Request, res: express.Response) => {
-    const bands: Band[] = await getRepository(Band).find()
-    res.send(bands)
+    BandController.getAllBands(req,res)
 })
 
 router.get('/:id', async (req: express.Request, res: express.Response) => {
-    const bandId: number = req.params.id
-    const band: Band = await getRepository(Band).findOne(bandId)
-
-    res.send(band)
+    BandController.GetOneBand(req.params.id,res)
 })
 
 router.post('/', async (req: express.Request, res: express.Response) => {
-    const band: Band = new Band()
     const data: any = JsonHandler.clearInput(req.body)
 
     if (!data.name) {
-        res.status(400)
-        const response: JsonHandler = JsonHandler.JsonResponse(false, "Champ 'nom' requis",res.statusCode)
-        return res.send(response)
+        return BandController.handleBadRequest(res,"Champ 'nom' requis")
     }
 
-    band.name = data.name
-    band.picture = data.picture
-    await getRepository(Band).save(band)
-
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Groupe créé')
-    res.send(response)
+    BandController.createBand(data,res)
 })
 
 router.delete('/:id', async (req: express.Request, res: express.Response) => {
-    const bandId: number = req.params.id
-    const band: Band = await getRepository(Band).findOne(bandId)
-
-    await getRepository(Band).remove(band)
-
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Groupe supprimé')
-    res.send(response)
+    BandController.deleteBand(req.params.id,res)
 })
 
 router.put('/:id', async (req: express.Request, res: express.Response) => {
-    const id: number = req.params.id
-    const band: Band = await getRepository(Band).findOne(id)
     const data: any = JsonHandler.clearInput(req.body)
 
-    band.name = data.name
-    band.picture = data.picture
-    await getRepository(Band).save(band)
-
-    const response: JsonHandler = JsonHandler.JsonResponse(true, 'Groupe edité')
-    res.send(response)
+    BandController.updateBand(data,req.params.id,res)
 })
 
 module.exports = router
