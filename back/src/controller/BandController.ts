@@ -6,14 +6,8 @@ import { BaseController } from './BaseController';
 
 export class BandController extends BaseController {
 
-    static getAllBands = async (req: express.Request, res: express.Response) => {
-        const bands: Band[] = await getRepository(Band).find()
-        res.send(bands)
-    }
-
-    static GetOneBand = async (bandId, res: express.Response) => {
-        const band: Band = await getRepository(Band).findOne(bandId)
-        res.send(band)
+    constructor(entityName:string){
+        super(entityName)
     }
 
     static createBand = async (sanitizedData: any, res: express.Response) => {
