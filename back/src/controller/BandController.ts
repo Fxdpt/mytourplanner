@@ -10,7 +10,7 @@ export class BandController extends BaseController {
         super(entityName)
     }
 
-    static createBand = async (sanitizedData: any, res: express.Response) => {
+    public createBand = async (sanitizedData: any, res: express.Response) => {
         const band: Band = new Band()
         band.name = sanitizedData.name
         band.picture = sanitizedData.picture
@@ -21,16 +21,7 @@ export class BandController extends BaseController {
         res.send(response)
     }
 
-    static deleteBand = async (bandId, res: express.Response) => {
-        const band: Band = await getRepository(Band).findOne(bandId)
-
-        await getRepository(Band).remove(band)
-
-        const response: JsonHandler = JsonHandler.JsonResponse(true, 'Groupe supprimé')
-        res.send(response)
-    }
-
-    static updateBand = async (SanitizedData: any, bandId, res: express.Response) => {
+    public updateBand = async (SanitizedData: any, bandId, res: express.Response) => {
         const band: Band = await getRepository(Band).findOne(bandId)
 
         band.name = SanitizedData.name

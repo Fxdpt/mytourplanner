@@ -39,11 +39,11 @@ export class BaseController {
 
         await getRepository(this.entityName).remove(result)
 
-        const response: JsonHandler = JsonHandler.JsonResponse(true, 'Groupe supprimé')
+        const response: JsonHandler = JsonHandler.JsonResponse(true, `${this.entityName} supprimé`)
         res.send(response)
     }
 
-    protected handleNotFound = (res: express.Response, message: string) => {
+    private handleNotFound = (res: express.Response, message: string) => {
         res.status(404)
         const response = JsonHandler.JsonResponse(false, message, res.statusCode)
 

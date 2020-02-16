@@ -19,7 +19,7 @@ router.post('/', async (req: express.Request, res: express.Response) => {
         return bandController.handleBadRequest(res, "Champ 'nom' requis")
     }
 
-    BandController.createBand(data, res)
+    bandController.createBand(data, res)
 })
 
 router.delete('/:id', async (req: express.Request, res: express.Response) => {
@@ -29,7 +29,7 @@ router.delete('/:id', async (req: express.Request, res: express.Response) => {
 router.put('/:id', async (req: express.Request, res: express.Response) => {
     const data: any = JsonHandler.clearInput(req.body)
 
-    BandController.updateBand(data, req.params.id, res)
+    bandController.updateBand(data, req.params.id, res)
 })
 
 module.exports = router
